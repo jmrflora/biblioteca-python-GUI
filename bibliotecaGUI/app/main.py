@@ -6,57 +6,88 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title('biblioteca GUI')
-        self.geometry('1280x720')
         
-       
+        self.width= 1280
+        self.height= 720
+        self.geometry(str(self.width) + 'x' + str(self.height) + '+0+0')
+        
+        self.current_frame = None
+        
+        #The container is a frame that contains the projects's frames
+        self.container = tk.Frame(self, 
+                                height=self.height, 
+                                width=self.width)
+
+        #Pack the container to the root
+        self.container.pack(side="top", fill="both", expand=True)
+
+        #Fixes pack location of the container using grid
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
+        
+        self.frames = {}
+        
+        # ir adicionado frames aqui:
+        for frame in (FrameLoginContainer, teste):
+            self.frames[frame] = frame(self.container)
+                
+        # self.selecionar_frame_container(FrameLoginContainer)     
     
-    def login_screen(self):
-        self.destroy()
-        self.__init__()
+    def selecionar_frame_container(self, frame: ctk.CTkFrame):
+        if self.current_frame:
+            self.current_frame.grid_forget()  # Forget the current frame
+        
+        self.current_frame = self.frames[frame]
+        self.current_frame.grid(row=0, column=0, sticky="nsew")  # Display the new frame
+
+        # Additional configuration to ensure the frame displays properly
+        self.current_frame.tkraise()
+        self.current_frame.update_idletasks()
+
+    
+        
+        
+        
+
+class FrameLoginContainer(ctk.CTkFrame):
+    def __init__(self, parente):
+        super().__init__(master=parente)
+        
         # variaveis
         fonte_titulo = ctk.CTkFont(size=55)
         
-        # tk variables
-        
-        
-        # layout
+        # layout container
         self.rowconfigure(0, weight=1, uniform='a')
         self.rowconfigure(1, weight=3, uniform='a')
         self.rowconfigure(2, weight=1, uniform='a')
         self.columnconfigure(0, weight=1)
-
-        # widgets
-        self.titulo_login = ctk.CTkLabel(self, text= "Login", font=fonte_titulo)
-        self.frame_login = FrameLogin(self)
-
         
-        # griding 
-        self.titulo_login.grid(row=0, column=0)
-        self.frame_login.grid(row=1, column=0, sticky="nsew")
-        
-
-
-class FrameLogin(ctk.CTkFrame):
-    def __init__(self, parente):
-        super().__init__(master=parente)
         # tk variables
         self.user_text_var = ctk.StringVar()
         self.passwd_text_var = ctk.StringVar()
         
-        # layout
-        self.rowconfigure(0, weight=4, uniform='b')
-        self.rowconfigure(1, weight=1, uniform='b')
-        self.columnconfigure(0, weight=1)
+        # widgets
+        self.titulo_login = ctk.CTkLabel(self, text= "Login", font=fonte_titulo)
+        # sub frame 1
+        self.sub_frame_login = ctk.CTkFrame(self)
+        
+        # layout subframe 1
+        self.sub_frame_login.rowconfigure(0, weight=4, uniform='b')
+        self.sub_frame_login.rowconfigure(1, weight=1, uniform='b')
+        self.sub_frame_login.columnconfigure(0, weight=1)
 
-        EntryLoginFrame(self, self.user_text_var, self.passwd_text_var).grid(row=0, column=0, sticky="nsew")
+        EntryLoginFrame(self.sub_frame_login, self.user_text_var, self.passwd_text_var).grid(row=0, column=0, sticky="nsew")
 
-        self.login_button = ctk.CTkButton(self,
+        self.login_button = ctk.CTkButton(self.sub_frame_login,
                                           text="Login",
                                           width=150,
                                           height=40,
                                           font=("", 20),
                                           command= lambda: print(self.passwd_text_var.get())
                                           ).grid(row=1,column=0)
+
+        self.titulo_login.grid(row=0, column=0)
+        self.sub_frame_login.grid(row=1, column=0, sticky="nsew")
 
 
 class EntryLoginFrame(ctk.CTkFrame):
@@ -75,9 +106,17 @@ class EntryLoginFrame(ctk.CTkFrame):
         self.passwd_label= ctk.CTkLabel(self, text='Senha', font=fonte_texto).grid(row=2, column=1, stick= "s")
         self.passwd_entry= ctk.CTkEntry(self, width=200, textvariable=passwd_text).grid(row=3, column=1, sticky = 'n')
 
+class teste(ctk.CTkFrame):
+    def __init__(self, parente):
+        super().__init__(master=parente, fg_color="transparent")
+        
 
 if __name__ == '__main__':
     app = App()
-    app.login_screen()
-    app.mainloop()
+    # app.selecionar_frame_container(FrameLoginContainer)
+    
+    app.selecionar_frame_container(FrameLoginContainer)
+    app.mainloop()  # Keep mainloop at the end of your application's setup
+    
+    
     
