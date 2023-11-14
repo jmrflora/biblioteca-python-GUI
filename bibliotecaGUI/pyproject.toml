@@ -9,6 +9,7 @@ readme = "README.md"
 python = "^3.11"
 packaging = "^23.2"
 customtkinter = "^5.2.1"
+requests = "^2.31.0"
 
 
 [build-system]
