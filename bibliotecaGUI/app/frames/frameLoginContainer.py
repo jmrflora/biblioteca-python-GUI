@@ -39,57 +39,22 @@ class FrameLoginContainer(ctk.CTkFrame):
                                           width=150,
                                           height=40,
                                           font=("", 20),
-                                          command=self.requestTeste
+                                          command= lambda: self.requestTeste(self.user_text_var.get(), self.passwd_text_var.get())
                                           ).grid(row=1, column=0)
 
         self.titulo_login.grid(row=0, column=0)
         self.sub_frame_login.grid(row=1, column=0, sticky="nsew")
 
-    def requestTeste(*args):
+    def requestTeste(args, username, passwd):
 
-        
-        resposta = RequestHandler.make_post_request("auth/token", data={"username":"admin", "password":"1234"})
+        # print(f"username {username}, senha {passwd}")
+
+        resposta = RequestHandler.make_post_request("auth/token", data={"username": username, "password": passwd})
         
         for key, value in resposta.items():
             print(f"Key: {key}, Value: {value}")
         
-        resposta = RequestHandler.make_get_request("/livros/")
-
-        for book in resposta:
-            for key, value in book.items():
-                print(f"Key: {key}, Value: {value}")
         
-        # print("request")
-
-        # # Replace with your actual FastAPI server URL
-        # base_url = "http://127.0.0.1:8000"
-
-        # response = requests.get(f"{base_url}/")
-
-        # if response.status_code == 200:
-        #     resposta_json = response.json()
-        #     for key, value in resposta_json.items():
-        #         print(f"Key: {key}, Value: {value}")
-        # else:
-        #     print('Failed to get token:', response.status_code)
-        #     return 0
-
-        # # Define the login credentials
-        # login_data = {
-        #     'username': 'user@example.com',
-        #     'password': 'user_password'
-        # }
-
-        # Make a POST request to get the access token
-        # response = requests.post(f"{base_url}/token", data=login_data)
-
-        # if response.status_code == 200:
-        #     token = response.json()
-        #     access_token = token['access_token']
-        #     print('Access Token:', access_token)
-        # else:
-        #     print('Failed to get token:', response.status_code)
-        #     return 0
 
 class EntryLoginFrame(ctk.CTkFrame):
     def __init__(self, parente, user_text, passwd_text):

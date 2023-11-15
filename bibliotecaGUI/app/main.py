@@ -36,11 +36,11 @@ class App(ctk.CTk):
             self.frames[frame].grid(row=0, column=0, sticky="nsew")
 
         # teste de troca de frames    
-        button = ctk.CTkButton(master=self, text="teste", command=lambda: self.selecionar_frame_container(teste))
+        button = ctk.CTkButton(master=self, text="teste", command=lambda: self.selecionar_frame_container(teste)) # type: ignore
         button.place(relx=0.1, rely=0.85)
 
         button2 = ctk.CTkButton(master=self, text="frame",
-                                command=lambda: self.selecionar_frame_container(FrameLoginContainer))
+                                command=lambda: self.selecionar_frame_container(FrameLoginContainer)) # type: ignore
         button2.place(relx=0.3, rely=0.85)
 
     def selecionar_frame_container(self, frame: ctk.CTkFrame):
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     app = App()
     # app.selecionar_frame_container(FrameLoginContainer)
 
-    app.selecionar_frame_container(FrameLoginContainer)
+    app.selecionar_frame_container(FrameLoginContainer) # type: ignore
     # app.selecionar_frame_container(teste)
     # app.selecionar_frame_container(FrameLoginContainer)
     app.mainloop()  # Keep mainloop at the end of your application's setup
