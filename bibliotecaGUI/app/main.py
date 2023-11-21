@@ -1,9 +1,11 @@
 import customtkinter as ctk
 import tkinter as tk
 import requests
+from CTkMenuBar import *
 
 from app.frames.frameLoginContainer import FrameLoginContainer
 from app.requisicoes.sessao import BackendTokenHandler
+from app.frames.welcomeFrame import WelcomeFrame
 
 ctk.set_appearance_mode("light")
 
@@ -19,7 +21,15 @@ class App(ctk.CTk):
         self.current_frame = None
 
         self.sessao = BackendTokenHandler()
-        
+
+        # todo: funcionalidade interessante
+
+        self.menu = CTkMenuBar(self)
+        button_1 = self.menu.add_cascade("File")
+        button_2 = self.menu.add_cascade("Edit")
+        button_3 = self.menu.add_cascade("Settings")
+        button_4 = self.menu.add_cascade("About")
+
         # The container is a frame that contains the projects's frames
         self.container = tk.Frame(self,
                                   height=self.height,
@@ -35,8 +45,8 @@ class App(ctk.CTk):
         self.frames = {}
 
         # ir adicionado frames aqui:
-        for frame in (FrameLoginContainer, teste):
-            self.frames[frame] = frame(self.container)
+        for frame in (FrameLoginContainer, teste, WelcomeFrame):
+            self.frames[frame] = frame(self.container, self.selecionar_frame_container)
             self.frames[frame].grid(row=0, column=0, sticky="nsew")
 
         # teste de troca de frames    
@@ -69,7 +79,7 @@ class App(ctk.CTk):
 
 
 class teste(ctk.CTkFrame):
-    def __init__(self, parente):
+    def __init__(self, parente, app_selecionar_frame):
         super().__init__(master=parente)
 
 

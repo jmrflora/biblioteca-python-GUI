@@ -4,11 +4,12 @@ import requests
 
 from app.requisicoes.request_handler import RequestHandler
 from app.requisicoes.sessao import BackendTokenHandler
+from app.frames.welcomeFrame import WelcomeFrame
 
 class FrameLoginContainer(ctk.CTkFrame):
-    def __init__(self, parente):
+    def __init__(self, parente, app_selecionar_frame):
         super().__init__(master=parente)
-
+        self.selecionar_frame = app_selecionar_frame
         # variaveis
         fonte_titulo = ctk.CTkFont(size=55)
 
@@ -40,13 +41,13 @@ class FrameLoginContainer(ctk.CTkFrame):
                                           width=150,
                                           height=40,
                                           font=("", 20),
-                                          command= lambda: self.requestTeste(self.user_text_var.get(), self.passwd_text_var.get())
+                                          command= lambda: self.requestTeste(self.user_text_var.get(), self.passwd_text_var.get(), self)
                                           ).grid(row=1, column=0)
 
         self.titulo_login.grid(row=0, column=0)
         self.sub_frame_login.grid(row=1, column=0, sticky="nsew")
 
-    def requestTeste(args, username, passwd):
+    def requestTeste(args, username, passwd, self):
 
         print(f"username {username}, senha {passwd}")
 
@@ -55,14 +56,20 @@ class FrameLoginContainer(ctk.CTkFrame):
         # for key, value in resposta.items():
         #     print(f"Key: {key}, Value: {value}")
 
-        sessao = BackendTokenHandler()
-        sessao.initialize_with_credentials(token_endpoint="auth/token", refresh_token_endpoint="auth/refresh", username=username, passwd=passwd)
+        try:
+            sessao = BackendTokenHandler()
+            sessao.initialize_with_credentials(token_endpoint="auth/token", refresh_token_endpoint="auth/refresh", username=username, passwd=passwd)
 
-        resposta = sessao.make_authenticated_request("GET", "/usuarios/cliente/all")
+            self.selecionar_frame(WelcomeFrame)
+        except:
+            print("erro")
+        
 
-        for dictionary in resposta:
-            for key, value in dictionary.items():
-              print(f"Key: {key}, Value: {value}")
+        # resposta = sessao.make_authenticated_request("GET", "/usuarios/cliente/all")
+
+        # for dictionary in resposta:
+        #     for key, value in dictionary.items():
+        #       print(f"Key: {key}, Value: {value}")
         
 
 class EntryLoginFrame(ctk.CTkFrame):
