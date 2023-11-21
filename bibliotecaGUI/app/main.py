@@ -3,19 +3,23 @@ import tkinter as tk
 import requests
 
 from app.frames.frameLoginContainer import FrameLoginContainer
+from app.requisicoes.sessao import BackendTokenHandler
 
+ctk.set_appearance_mode("light")
 
 class App(ctk.CTk):
+
     def __init__(self):
         super().__init__()
         self.title('biblioteca GUI')
-
         self.width = 1280
         self.height = 720
         self.geometry(str(self.width) + 'x' + str(self.height) + '+0+0')
-
+        
         self.current_frame = None
 
+        self.sessao = BackendTokenHandler()
+        
         # The container is a frame that contains the projects's frames
         self.container = tk.Frame(self,
                                   height=self.height,
@@ -42,6 +46,9 @@ class App(ctk.CTk):
         button2 = ctk.CTkButton(master=self, text="frame",
                                 command=lambda: self.selecionar_frame_container(FrameLoginContainer)) # type: ignore
         button2.place(relx=0.3, rely=0.85)
+        
+        button3 = ctk.CTkButton(master=self, text="print", command=lambda: print(self.sessao.get_token()))
+        button3.place(relx=0.5, rely=0.85)
 
     def selecionar_frame_container(self, frame: ctk.CTkFrame):
         # if self.current_frame:
@@ -69,8 +76,10 @@ class teste(ctk.CTkFrame):
 if __name__ == '__main__':
     app = App()
     # app.selecionar_frame_container(FrameLoginContainer)
-
+    
     app.selecionar_frame_container(FrameLoginContainer) # type: ignore
+    
+
     # app.selecionar_frame_container(teste)
     # app.selecionar_frame_container(FrameLoginContainer)
     app.mainloop()  # Keep mainloop at the end of your application's setup

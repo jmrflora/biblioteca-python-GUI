@@ -3,6 +3,7 @@ import tkinter as tk
 import requests
 
 from app.requisicoes.request_handler import RequestHandler
+from app.requisicoes.sessao import BackendTokenHandler
 
 class FrameLoginContainer(ctk.CTkFrame):
     def __init__(self, parente):
@@ -47,13 +48,21 @@ class FrameLoginContainer(ctk.CTkFrame):
 
     def requestTeste(args, username, passwd):
 
-        # print(f"username {username}, senha {passwd}")
+        print(f"username {username}, senha {passwd}")
 
-        resposta = RequestHandler.make_post_request("auth/token", data={"username": username, "password": passwd})
+        # resposta = RequestHandler.make_post_request("auth/token", data={"username": username, "password": passwd})
         
-        for key, value in resposta.items():
-            print(f"Key: {key}, Value: {value}")
-        
+        # for key, value in resposta.items():
+        #     print(f"Key: {key}, Value: {value}")
+
+        sessao = BackendTokenHandler()
+        sessao.initialize_with_credentials(token_endpoint="auth/token", refresh_token_endpoint="auth/refresh", username=username, passwd=passwd)
+
+        resposta = sessao.make_authenticated_request("GET", "/usuarios/cliente/all")
+
+        for dictionary in resposta:
+            for key, value in dictionary.items():
+              print(f"Key: {key}, Value: {value}")
         
 
 class EntryLoginFrame(ctk.CTkFrame):
