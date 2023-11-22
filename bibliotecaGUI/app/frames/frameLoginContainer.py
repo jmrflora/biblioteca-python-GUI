@@ -1,15 +1,18 @@
 import customtkinter as ctk
 import tkinter as tk
 import requests
+from CTkMessagebox import CTkMessagebox
 
 from app.requisicoes.request_handler import RequestHandler
 from app.requisicoes.sessao import BackendTokenHandler
-from app.frames.welcomeFrame import WelcomeFrame
+# from app.frames.welcomeFrame import WelcomeFrame
 
 class FrameLoginContainer(ctk.CTkFrame):
-    def __init__(self, parente, app_selecionar_frame):
+    def __init__(self, parente, app_adicionarFrames):
         super().__init__(master=parente)
-        self.selecionar_frame = app_selecionar_frame
+        
+        self.adicionar_frames = app_adicionarFrames
+
         # variaveis
         fonte_titulo = ctk.CTkFont(size=55)
 
@@ -22,7 +25,7 @@ class FrameLoginContainer(ctk.CTkFrame):
         # tk variables
         self.user_text_var = ctk.StringVar()
         self.passwd_text_var = ctk.StringVar()
-
+        
         # widgets
         self.titulo_login = ctk.CTkLabel(self, text="Login", font=fonte_titulo)
         # sub frame 1
@@ -49,20 +52,25 @@ class FrameLoginContainer(ctk.CTkFrame):
 
     def requestTeste(args, username, passwd, self):
 
-        print(f"username {username}, senha {passwd}")
+        # print(f"username {username}, senha {passwd}")
 
-        # resposta = RequestHandler.make_post_request("auth/token", data={"username": username, "password": passwd})
-        
-        # for key, value in resposta.items():
-        #     print(f"Key: {key}, Value: {value}")
+        print(FrameLoginContainer.__name__)
 
         try:
             sessao = BackendTokenHandler()
-            sessao.initialize_with_credentials(token_endpoint="auth/token", refresh_token_endpoint="auth/refresh", username=username, passwd=passwd)
+            sessao.initialize_with_credentials(username=username, passwd=passwd)
+            self.user_text_var.set("")
+            self.passwd_text_var.set("")
 
-            self.selecionar_frame(WelcomeFrame)
+            self.adicionar_frames()
+            
         except:
-            print("erro")
+
+            self.passwd_text_var.set("")
+            msg = CTkMessagebox(master=self, title="Erro", message="Credenciais inválidas",
+                        icon="warning", option_1="Ok")
+            
+
         
 
         # resposta = sessao.make_authenticated_request("GET", "/usuarios/cliente/all")

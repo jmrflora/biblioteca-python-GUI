@@ -20,7 +20,7 @@ class App(ctk.CTk):
         
         self.current_frame = None
 
-        self.sessao = BackendTokenHandler()
+        self.sessao = BackendTokenHandler("http://127.0.0.1:8000", token_endpoint="auth/token", refresh_token_endpoint="auth/refresh")
 
         # todo: funcionalidade interessante
 
@@ -44,35 +44,65 @@ class App(ctk.CTk):
 
         self.frames = {}
 
+        self.frames[FrameLoginContainer.__name__] = FrameLoginContainer(self.container, self.add_frames)
+        self.frames[FrameLoginContainer.__name__].grid(row=0, column=0, sticky="nsew")
+
+        self.selecionar_frame_container(FrameLoginContainer.__name__)
+
         # ir adicionado frames aqui:
-        for frame in (FrameLoginContainer, teste, WelcomeFrame):
-            self.frames[frame] = frame(self.container, self.selecionar_frame_container)
-            self.frames[frame].grid(row=0, column=0, sticky="nsew")
+        # for frame in (FrameLoginContainer, teste, WelcomeFrame):
+        #     self.frames[frame.__name__] = frame(self.container, self.selecionar_frame_container)
+        #     self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
 
         # teste de troca de frames    
-        button = ctk.CTkButton(master=self, text="teste", command=lambda: self.selecionar_frame_container(teste)) # type: ignore
-        button.place(relx=0.1, rely=0.85)
+        # button = ctk.CTkButton(master=self, text="teste", command=lambda: self.selecionar_frame_container("teste")) # type: ignore
+        # button.place(relx=0.1, rely=0.85)
 
-        button2 = ctk.CTkButton(master=self, text="frame",
-                                command=lambda: self.selecionar_frame_container(FrameLoginContainer)) # type: ignore
-        button2.place(relx=0.3, rely=0.85)
+        # button2 = ctk.CTkButton(master=self, text="frame",
+        #                         command=lambda: self.selecionar_frame_container("FrameLoginContainer")) # type: ignore
+        # button2.place(relx=0.3, rely=0.85)
         
-        button3 = ctk.CTkButton(master=self, text="print", command=lambda: print(self.sessao.get_token()))
-        button3.place(relx=0.5, rely=0.85)
+        # button3 = ctk.CTkButton(master=self, text="print", command=lambda: print(self.sessao.get_token()))
+        # button3.place(relx=0.5, rely=0.85)
 
-    def selecionar_frame_container(self, frame: ctk.CTkFrame):
-        # if self.current_frame:
-        #     self.current_frame.grid_forget()  # Forget the current frame
+    def add_frames(self):
 
-        # self.current_frame = self.frames[frame]
+        tipo = self.sessao.get_tipo()
+        if tipo == "cliente":
+            for frame in (WelcomeFrame, teste):
+                self.frames[frame.__name__] = frame(self.container, self.selecionar_frame_container)
+                self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
 
-        # self.current_frame.grid(row=0, column=0, sticky="nsew")  # Display the new frame
+            self.selecionar_frame_container(WelcomeFrame.__name__)
+        else:
+            print("ola admin")
 
-        # # Additional configuration to ensure the frame displays properly
-        # self.current_frame.tkraise()
-        # self.current_frame.update_idletasks()
+    def logout(self):
+        # Get the existing FrameLoginContainer instance
+        frame_var = self.frames.pop(FrameLoginContainer, None)
 
-        framevar: ctk.CTkFrame = self.frames[frame]
+        # Check if an instance exists before destroying it
+        if frame_var:
+            frame_var.destroy()
+
+        # Create and show a new instance of FrameLoginContainer
+        self.frames[FrameLoginContainer] = FrameLoginContainer(self.container, self.selecionar_frame_container)
+        self.frames[FrameLoginContainer].grid(row=0, column=0, sticky="nsew")
+
+        # Additional cleanup steps (if needed)
+
+        # Switch to the login frame
+        self.selecionar_frame_container(FrameLoginContainer)
+
+    def selecionar_frame_container(self, frame_name):
+        # fazer com que sempre que selecionar login todos os outros frames sejam apagados
+        if frame_name == FrameLoginContainer.__name__:
+            novo_frames = {frame_name: self.frames[frame_name]}
+            self.frames.clear()
+            self.frames.update(novo_frames)
+            self.frames[FrameLoginContainer.__name__].grid(row=0, column=0, sticky="nsew")
+
+        framevar: ctk.CTkFrame = self.frames[frame_name]
 
         framevar.tkraise()
 
@@ -87,7 +117,7 @@ if __name__ == '__main__':
     app = App()
     # app.selecionar_frame_container(FrameLoginContainer)
     
-    app.selecionar_frame_container(FrameLoginContainer) # type: ignore
+    app.selecionar_frame_container(FrameLoginContainer.__name__) # type: ignore
     
 
     # app.selecionar_frame_container(teste)

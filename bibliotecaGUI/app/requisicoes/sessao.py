@@ -10,20 +10,24 @@ class BackendTokenHandler:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def __init__(self):
+    def __init__(self, base_url=None, token_endpoint=None, refresh_token_endpoint=None):
         if not hasattr(self, 'initialized'):
-            self.base_url = "http://127.0.0.1:8000"
-            self.token_endpoint = None
-            self.refresh_token_endpoint = None
+            self.base_url = base_url
+            self.token_endpoint = token_endpoint
+            self.refresh_token_endpoint = refresh_token_endpoint
             self.access_token = None
             self.refresh_token = None
+            self.tipo = None
             self.initialized = True
 
-    def initialize_with_credentials(self, token_endpoint, refresh_token_endpoint, username, passwd):
-        self.token_endpoint = token_endpoint
-        self.refresh_token_endpoint = refresh_token_endpoint
+    def initialize_with_credentials(self, username, passwd):
         self._get_new_token(username, passwd)
-        
+
+    def close(self):
+        self.access_token = None
+        self.refresh_token = None
+        self.tipo = None
+
     def _get_new_token(self, username, passwd):
         token_response = requests.post(
             f"{self.base_url}/{self.token_endpoint}",
@@ -58,6 +62,7 @@ class BackendTokenHandler:
             self._get_new_token()
         return self.access_token
 
+    
     def make_authenticated_request(self, method, endpoint, data=None):
         headers = {"Authorization": f"Bearer {self.get_token()}"}
         url = f"{self.base_url}{endpoint}"
@@ -83,3 +88,13 @@ class BackendTokenHandler:
             return response.json()
         else:
             raise ValueError(f"Request failed: {response.status_code}")
+        
+    def get_tipo(self):
+        if self.tipo is None:
+            me_response = self.make_authenticated_request("GET", "/usuarios/me")
+
+            self.tipo = me_response.get("tipo")
+            
+            return self.tipo
+        else:
+            return self.tipo
