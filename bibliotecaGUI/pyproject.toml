@@ -12,6 +12,7 @@ customtkinter = "^5.2.1"
 requests = "^2.31.0"
 ctkmenubar = "^0.3"
 ctkmessagebox = "^2.5"
+ctktable = "^0.8"
 
 
 [build-system]

@@ -140,6 +140,20 @@ customtkinter = "*"
 pillow = "*"
 
 [[package]]
+name = "ctktable"
+version = "0.8"
+description = "Customtkinter Table widget"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "CTkTable-0.8-py3-none-any.whl", hash = "sha256:ae7d3a28ad10ad8fb309c6483184b27c0e794ac0cad8ee9479c4cf673755823d"},
+    {file = "CTkTable-0.8.tar.gz", hash = "sha256:8d00274b461c7516a76dd4266134c8bf9898deb694925a85f8fe344e9b593ea0"},
+]
+
+[package.dependencies]
+customtkinter = "*"
+
+[[package]]
 name = "customtkinter"
 version = "5.2.1"
 description = "Create modern looking GUIs with Python"
@@ -296,4 +310,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "44a1f06307f942227f378069b2e277ab01a032f6d2a42b36469c69bc654aab88"
+content-hash = "e7683a59e18a769cd36ea30bd8d8fdb1d6648ca0bf7d3919dde8274aef80e530"
