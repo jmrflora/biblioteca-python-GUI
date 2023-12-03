@@ -26,6 +26,13 @@ class MyCustomCTkTable(CTkTable):
                 else:
                     widget.grid_forget()
 
+    def get(self, row=None, column=None):
+        
+        if row != None and column != None:
+            return self.data[row,column]["value"]
+        else:
+            return self.values
+
 false = False
 # value = [[1,2,3,4,5],
 #          [1,2,3,4,5],
@@ -126,18 +133,18 @@ def comando(row, column, value):
     print(f"row{row}, column{column}, value{value}")
 
 list_of_lists = [[book["nome"], book["Autor"], str(book["EP"]), str(book["id"])] for book in values]
-
+print(list_of_lists)
 teste_frame = customtkinter.CTkScrollableFrame(master=root)
 teste_frame.grid(row=0, column=0, sticky="nsew")
 
 teste_frame.bind_all("<Button-4>", lambda e: teste_frame._parent_canvas.yview("scroll", -1, "units"))
 teste_frame.bind_all("<Button-5>", lambda e: teste_frame._parent_canvas.yview("scroll", 1, "units"))
 
-table = MyCustomCTkTable(master=teste_frame, values=list_of_lists, row=len(values), column=4, command= lambda v:print(v))
+table = MyCustomCTkTable(master=teste_frame, values=list_of_lists, row=len(values),corner_radius=0, width=30,height=50, column=4, command= lambda v:print(v))
 
-table.set_column_visibility(3, visible=False)
-print(table.get_row(0))
-
+# table.set_column_visibility(3, visible=False)
+print(table.get(row=1,column=1))
+# table.add_row([1], 1)
 
 table.pack(expand=True, fill="both")
 

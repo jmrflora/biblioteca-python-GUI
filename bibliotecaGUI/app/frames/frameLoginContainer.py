@@ -46,8 +46,9 @@ class FrameLoginContainer(ctk.CTkFrame):
                                           font=("", 20),
                                           command= lambda: self.requestTeste(self.user_text_var.get(), self.passwd_text_var.get(), self)
                                           ).grid(row=1, column=0)
-
+        
         self.titulo_login.grid(row=0, column=0)
+        
         self.sub_frame_login.grid(row=1, column=0, sticky="nsew")
 
     def requestTeste(args, username, passwd, self):

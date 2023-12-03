@@ -2,10 +2,12 @@ import customtkinter as ctk
 import tkinter as tk
 import requests
 from CTkMenuBar import *
+from app.frames.consultarEmprestimo import ConsultarEmprestimosFrame
 
 from app.frames.frameLoginContainer import FrameLoginContainer
 from app.requisicoes.sessao import BackendTokenHandler
 from app.frames.welcomeFrame import WelcomeFrame
+from app.frames.consultarLivors import ConsultarLivrosFrame
 
 ctk.set_appearance_mode("light")
 
@@ -19,11 +21,9 @@ class App(ctk.CTk):
         self.geometry(str(self.width) + 'x' + str(self.height) + '+0+0')
         
         self.current_frame = None
-
         self.sessao = BackendTokenHandler("http://127.0.0.1:8000", token_endpoint="auth/token", refresh_token_endpoint="auth/refresh")
 
         # todo: funcionalidade interessante
-
         self.menu = CTkMenuBar(self)
         button_1 = self.menu.add_cascade("File")
         button_2 = self.menu.add_cascade("Edit")
@@ -43,7 +43,6 @@ class App(ctk.CTk):
         self.container.grid_columnconfigure(0, weight=1)
 
         self.frames = {}
-
         self.frames[FrameLoginContainer.__name__] = FrameLoginContainer(self.container, self.add_frames)
         self.frames[FrameLoginContainer.__name__].grid(row=0, column=0, sticky="nsew")
 
@@ -69,7 +68,8 @@ class App(ctk.CTk):
 
         tipo = self.sessao.get_tipo()
         if tipo == "cliente":
-            for frame in (WelcomeFrame, teste):
+            for frame in (WelcomeFrame,ConsultarLivrosFrame, ConsultarEmprestimosFrame):
+                print(frame.__name__)
                 self.frames[frame.__name__] = frame(self.container, self.selecionar_frame_container)
                 self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
 
@@ -115,11 +115,6 @@ class teste(ctk.CTkFrame):
 
 if __name__ == '__main__':
     app = App()
-    # app.selecionar_frame_container(FrameLoginContainer)
     
-    app.selecionar_frame_container(FrameLoginContainer.__name__) # type: ignore
-    
-
-    # app.selecionar_frame_container(teste)
-    # app.selecionar_frame_container(FrameLoginContainer)
+    # app.selecionar_frame_container(FrameLoginContainer.__name__) # type: ignore
     app.mainloop()  # Keep mainloop at the end of your application's setup
