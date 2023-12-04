@@ -45,41 +45,32 @@ class FrameLoginContainer(ctk.CTkFrame):
                                           height=40,
                                           font=("", 20),
                                           command= lambda: self.requestTeste(self.user_text_var.get(), self.passwd_text_var.get(), self)
-                                          ).grid(row=1, column=0)
+                                          )
         
+        self.login_button.grid(row=1, column=0)
+
         self.titulo_login.grid(row=0, column=0)
         
         self.sub_frame_login.grid(row=1, column=0, sticky="nsew")
 
     def requestTeste(args, username, passwd, self):
 
-        # print(f"username {username}, senha {passwd}")
-
-        print(FrameLoginContainer.__name__)
-
+        self.login_button.configure(state="disabled")
+    
         try:
             sessao = BackendTokenHandler()
             sessao.initialize_with_credentials(username=username, passwd=passwd)
             self.user_text_var.set("")
             self.passwd_text_var.set("")
-
             self.adicionar_frames()
             
         except:
-
             self.passwd_text_var.set("")
             msg = CTkMessagebox(master=self, title="Erro", message="Credenciais inválidas",
                         icon="warning", option_1="Ok")
-            
 
-        
+        self.login_button.configure(state="normal")    
 
-        # resposta = sessao.make_authenticated_request("GET", "/usuarios/cliente/all")
-
-        # for dictionary in resposta:
-        #     for key, value in dictionary.items():
-        #       print(f"Key: {key}, Value: {value}")
-        
 
 class EntryLoginFrame(ctk.CTkFrame):
     def __init__(self, parente, user_text, passwd_text):

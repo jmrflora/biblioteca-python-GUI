@@ -29,13 +29,15 @@ class ConsultarEmprestimosFrame(ctk.CTkFrame):
         self.valuesemprestimos :list[dict] = self.sessao.make_authenticated_request("GET", "/emprestimos/me")
         self.lista_de_listas = []
         for emprestimo in self.valuesemprestimos:
-            exemplar_id = emprestimo.get("exemplar_id")
-            usuario_id = emprestimo.get("usuario_id")
+            livro = emprestimo.get("livro")
+            livro_nome = livro.get("nome")
             emprestimo_id = emprestimo.get("id")
             timestamp = emprestimo.get("created_at")
             dt_object = datetime.fromisoformat(timestamp)
             created_at = dt_object.strftime("%B %d")
-            self.lista_de_listas.append([emprestimo_id, usuario_id, exemplar_id, created_at])
+            status_emprestimo_resposta = self.sessao.make_authenticated_request("GET", f"/emprestimos/{emprestimo_id}/status")
+            status = status_emprestimo_resposta.get("status")
+            self.lista_de_listas.append([emprestimo_id, created_at, livro_nome, status])
             
         self.selecionar_frame = app_selecionar_frame
         # layout

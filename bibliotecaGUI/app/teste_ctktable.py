@@ -147,5 +147,6 @@ print(table.get(row=1,column=1))
 # table.add_row([1], 1)
 
 table.pack(expand=True, fill="both")
+table.pack(expand=True, fill="both")
 
 root.mainloop()

@@ -7,7 +7,7 @@ from app.frames.consultarEmprestimo import ConsultarEmprestimosFrame
 from app.frames.frameLoginContainer import FrameLoginContainer
 from app.requisicoes.sessao import BackendTokenHandler
 from app.frames.welcomeFrame import WelcomeFrame
-from app.frames.consultarLivors import ConsultarLivrosFrame
+from app.frames.consultarLivros import ConsultarLivrosFrame
 
 ctk.set_appearance_mode("light")
 
@@ -71,7 +71,7 @@ class App(ctk.CTk):
             for frame in (WelcomeFrame,ConsultarLivrosFrame, ConsultarEmprestimosFrame):
                 print(frame.__name__)
                 self.frames[frame.__name__] = frame(self.container, self.selecionar_frame_container)
-                self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
+                # self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
 
             self.selecionar_frame_container(WelcomeFrame.__name__)
         else:
@@ -103,8 +103,9 @@ class App(ctk.CTk):
             self.frames[FrameLoginContainer.__name__].grid(row=0, column=0, sticky="nsew")
 
         framevar: ctk.CTkFrame = self.frames[frame_name]
-
+        framevar.grid(row=0, column=0, sticky="nsew")
         framevar.tkraise()
+
 
 
 
