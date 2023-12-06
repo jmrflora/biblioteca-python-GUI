@@ -1,10 +1,9 @@
 import requests
+import json
 from datetime import datetime, timedelta
 
 class BackendTokenHandler:
-    
     _instance = None
-
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super().__new__(cls)
@@ -70,7 +69,13 @@ class BackendTokenHandler:
         if method == "GET":
             response = requests.get(url, headers=headers)
         elif method == "POST":
-            response = requests.post(url, headers=headers, data=data)
+            response = requests.post(url, headers=headers, data=json.dumps(data))
+        elif method == "PATCH":
+            print("patch")
+            print(data)
+            # 'Content-Type: application/json'
+            # novo_headers = {"Authorization": f"Bearer {self.get_token()}"}
+            response = requests.patch(url, headers=headers, data=json.dumps(data))
         else:
             raise ValueError("Invalid HTTP method. Supported methods: GET, POST")
 
@@ -83,6 +88,8 @@ class BackendTokenHandler:
                 response = requests.get(url, headers=headers)
             elif method == "POST":
                 response = requests.post(url, headers=headers, data=data)
+            elif method == "PATCH":
+                response = requests.patch(url, headers=headers, data=data)
 
         if response.status_code == 200:
             return response.json()

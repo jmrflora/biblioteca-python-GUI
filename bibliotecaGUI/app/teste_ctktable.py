@@ -140,7 +140,8 @@ teste_frame.grid(row=0, column=0, sticky="nsew")
 teste_frame.bind_all("<Button-4>", lambda e: teste_frame._parent_canvas.yview("scroll", -1, "units"))
 teste_frame.bind_all("<Button-5>", lambda e: teste_frame._parent_canvas.yview("scroll", 1, "units"))
 
-table = MyCustomCTkTable(master=teste_frame, values=list_of_lists, row=len(values),corner_radius=0, width=30,height=50, column=4, command= lambda v:print(v))
+data = [[3, 1, 2], [4, 3, 4], [5, 3, 6], [6, 8, 2], [7, 8, 6], [8, 8, 8], [9, 8, 8], [10, 8, 9], [11, 7, 10], [12, 8, 5], [17, 8, 4]]
+table = MyCustomCTkTable(master=teste_frame, values=data, row=len(data),corner_radius=0, width=30,height=50, column=3, command= lambda v:print(v))
 
 # table.set_column_visibility(3, visible=False)
 print(table.get(row=1,column=1))
@@ -148,5 +149,9 @@ print(table.get(row=1,column=1))
 
 table.pack(expand=True, fill="both")
 table.pack(expand=True, fill="both")
+
+
+
+
 
 root.mainloop()

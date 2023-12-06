@@ -2,12 +2,17 @@ import customtkinter as ctk
 import tkinter as tk
 import requests
 from CTkMenuBar import *
+from app.frames.adminFrames.verEmprestimos import VerEmprestimos
 from app.frames.consultarEmprestimo import ConsultarEmprestimosFrame
 
 from app.frames.frameLoginContainer import FrameLoginContainer
 from app.requisicoes.sessao import BackendTokenHandler
 from app.frames.welcomeFrame import WelcomeFrame
 from app.frames.consultarLivros import ConsultarLivrosFrame
+from app.frames.adminFrames.welcomeAdminFrame import WelcomeFrameAdmin
+from app.frames.adminFrames.consultarLivrosAdmin import ConsultarLivrosFrameAdmin
+from app.frames.adminFrames.consultarEmprestimosAdmin import ConsultarEmprestimosAdmin
+from app.frames.adminFrames.criarEmprestimo import CriarEmprestimos
 
 ctk.set_appearance_mode("light")
 
@@ -75,7 +80,12 @@ class App(ctk.CTk):
 
             self.selecionar_frame_container(WelcomeFrame.__name__)
         else:
-            print("ola admin")
+            for frame in (ConsultarLivrosFrameAdmin, WelcomeFrameAdmin, ConsultarEmprestimosAdmin, CriarEmprestimos, VerEmprestimos):
+                print(frame.__name__)
+                self.frames[frame.__name__] = frame(self.container, self.selecionar_frame_container)
+                # self.frames[frame.__name__].grid(row=0, column=0, sticky="nsew")
+
+            self.selecionar_frame_container(WelcomeFrameAdmin.__name__)
 
     def logout(self):
         # Get the existing FrameLoginContainer instance
